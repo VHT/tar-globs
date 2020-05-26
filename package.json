@@ -10,6 +10,9 @@
   "engines": {
     "node": ">=10.0.0"
   },
+  "publishConfig": {
+    "access": "public"
+  },
   "dependencies": {
     "micromatch": "^4.0.2",
     "tar-stream": "^2.1.2",

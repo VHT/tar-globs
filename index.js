@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 const yargs = require('yargs');
 const filtering = require('./filtering');
 const Packager = require('./packager');
