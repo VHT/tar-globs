@@ -9,7 +9,6 @@ yargs.option('in', {
   type: 'string',
   description: 'Input file defining which files to include. Each line must be a glob pattern. See https://github.com/micromatch/micromatch for glob patter support.',
   nargs: 1,
-  default: 'whitelist.dat',
   require: true
 }).option('out', {
   alias: 'o',
