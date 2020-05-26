@@ -1,0 +1,15 @@
+{
+  "name": "@vht/tar-globs",
+  "version": "0.0.0",
+  "description": "Utility to archive files matching glob paths.",
+  "main": "index.js",
+  "author": "VHT",
+  "license": "MIT",
+  "private": false,
+  "bin": "./index.js",
+  "dependencies": {
+    "micromatch": "^4.0.2",
+    "tar-stream": "^2.1.2",
+    "yargs": "^15.3.1"
+  }
+}
