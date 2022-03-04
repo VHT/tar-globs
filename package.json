@@ -1,6 +1,6 @@
 {
   "name": "@vht/tar-globs",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Utility to archive files matching glob paths.",
   "main": "index.js",
   "author": "VHT",
