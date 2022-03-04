@@ -35,7 +35,8 @@ module.exports = class Packager {
     if(relativeFile[0] === path.sep) {
       relativeFile = relativeFile.substring(1);
     }
-    logger.log(`  Adding [${relativeFile}]`);
+    const rename = state.config.rename[relativeFile];
+    logger.log(`  Adding [${relativeFile}${rename ? ` => ${rename}` : ''}]`);
 
     if (state.args.dryRun) {
       return;
@@ -43,13 +44,17 @@ module.exports = class Packager {
 
     try {
       const fileContents = await fs.promises.readFile(file);
-      this._archive.append(fileContents, { name: relativeFile });
+      this._archive.append(fileContents, { name: rename || relativeFile });
     } catch (ex) {
       logger.fatal(1, `Error adding file [${relativeFile}] to tar.`, ex);
     }
   };
 
   finalize() {
+    if (state.args.dryRun) {
+      return;
+    }
+
     this._archive.finalize();
   };
 }
