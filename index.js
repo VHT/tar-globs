@@ -25,11 +25,15 @@ yargs.option('in', {
   alias: 's',
   type: 'boolean',
   description: 'Silence extraneous output. Errors will still be written to stderr.'
+}).option('cwd', {
+  alias: 'c',
+  type: 'string',
+  description: 'Directory to use as the root to scan for files to tar. Default is the node process cwd.'
 }).strict();
 
 async function main() {
   const args = yargs.argv;
-  const cwd = process.cwd();
+  const cwd = args.cwd || process.cwd();
   state.args = args;
   state.cwd = cwd;
 
