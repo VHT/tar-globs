@@ -1,26 +1,33 @@
 const fs = require('fs');
 const path = require('path');
-const zlib = require('zlib');
-const tar = require('tar-stream');
+const archiver = require('archiver');
 const state = require('./state');
 const logger = require('./logger');
 
 module.exports = class Packager {
   constructor() {
-    this._pack = tar.pack();
-  };
+    if (state.args.dryRun) {
+      return;
+    }
 
-  _compress() {
-    return new Promise((resolve, reject) => {
-      const destination = fs.createWriteStream(state.args.out);
-      const gz = new zlib.Gzip();
-      destination.on('close', () => resolve());
-      try {
-        this._pack.pipe(gz).pipe(destination);
-      } catch (ex) {
-        reject(ex);
+    this._archive = archiver(state.args.zip ? 'zip' : 'tar');
+    this._output = fs.createWriteStream(path.resolve(state.cwd, state.args.out));
+
+    this._archive.on('warning', function(err) {
+      if (err.code === 'ENOENT') {
+      } else {
+        console.warn(err);
       }
     });
+
+    this._archive.on('error', function(err) {
+      console.error(err);
+    });
+
+    this._output.on('close', function() {
+    });
+
+    this._archive.pipe(this._output);
   };
 
   async add(file) {
@@ -36,25 +43,13 @@ module.exports = class Packager {
 
     try {
       const fileContents = await fs.promises.readFile(file);
-      this._pack.entry({ name: relativeFile }, fileContents);
+      this._archive.append(fileContents, { name: relativeFile });
     } catch (ex) {
       logger.fatal(1, `Error adding file [${relativeFile}] to tar.`, ex);
     }
   };
 
-  async finalize() {
-    if (state.args.dryRun) {
-      return;
-    }
-
-    logger.log('Compressing...');
-    try {
-      this._pack.finalize();
-      if(state.args.out) {
-        await this._compress();
-      }
-    } catch (ex) {
-      logger.fatal(1, `Error while compressing.`, ex);
-    }
+  finalize() {
+    this._archive.finalize();
   };
 }

@@ -14,8 +14,8 @@
     "access": "public"
   },
   "dependencies": {
-    "micromatch": "^4.0.2",
-    "tar-stream": "^2.1.2",
+    "archiver": "^5.3.0",
+    "micromatch": "^4.0.4",
     "yargs": "^17.3.1"
   }
 }
